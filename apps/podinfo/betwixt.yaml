@@ -1,0 +1,14 @@
+apiVersion: betwixt.dev/v1alpha1
+application: podinfo
+project: lab
+namespace: podinfo
+components:
+  - name: podinfo
+    chart:
+      repo: https://stefanprodan.github.io/podinfo
+      name: podinfo
+      version: 6.15.0
+      digest: sha256:5ca7896889b539e04cdad4df2093ff1ff7576295e7e3ef90a1e1845e3a334d75
+    values: [values.yaml]
+profiles:
+  lab: {}

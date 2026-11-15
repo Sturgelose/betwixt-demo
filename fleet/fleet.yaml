@@ -1,0 +1,49 @@
+apiVersion: betwixt.dev/v1alpha1
+kind: AttributeSchema
+name: default
+attributes:
+  domain:
+    type: string
+    required: true
+    description: The base DNS domain of the cluster.
+---
+apiVersion: betwixt.dev/v1alpha1
+kind: Profile
+name: lab
+description: The Raspberry Pi of the lab.
+attributes:
+  domain: lab.sturgelose.com
+---
+apiVersion: betwixt.dev/v1alpha1
+kind: Project
+name: lab
+description: The applications of the lab.
+owners: [team:coolteam]
+profiles: [lab]
+---
+apiVersion: betwixt.dev/v1alpha1
+kind: TrustRule
+name: lab-deploy
+description: The repository Sturgelose/betwixt-demo pushes the lab applications from main, and previews from pull requests.
+issuer: https://token.actions.githubusercontent.com
+claims:
+  repository_id: "1458626703"
+modes:
+  deploy: { ref: refs/heads/main }
+  preview: {}
+projects: [lab]
+---
+apiVersion: betwixt.dev/v1alpha1
+kind: Cluster
+name: pi
+profile: lab
+description: Raspberry Pi 4 with Talos.
+facts:
+  kubeVersion: 1.37.1
+  argocdVersion: 3.6.1
+---
+apiVersion: betwixt.dev/v1alpha1
+kind: Pipeline
+name: default
+stages:
+  - profile: lab

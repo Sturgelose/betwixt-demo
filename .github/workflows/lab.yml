@@ -1,0 +1,36 @@
+name: lab
+
+# Only manual runs until the fleet transfer from Sturgelose/betwixt is started
+# (Sturgelose/betwixt#80). Before that, the apply fails, because the objects
+# belong to the old repository. Add the push trigger at the cut-over.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: lab
+  cancel-in-progress: false
+
+env:
+  BETWIXT_SERVER: https://betwixt-api.sturgelose.com
+  BETWIXT_ORG: foobar
+  BETWIXT_AUDIENCE_BASE: https://betwixt.sturgelose.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          # betwixt push lists the commits since the last revision.
+          fetch-depth: 0
+      - uses: Sturgelose/betwixt-cli@v0.1.0
+      - run: betwixt apply -f fleet
+      - run: |
+          for app in apps/*/; do
+            betwixt push --dir "$app"
+          done
