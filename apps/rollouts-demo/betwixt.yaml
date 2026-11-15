@@ -1,0 +1,9 @@
+apiVersion: betwixt.dev/v1alpha1
+application: rollouts-demo
+project: lab
+namespace: rollouts-demo
+components:
+  - name: rollouts-demo
+    manifests: [manifests.yaml]
+profiles:
+  lab: {}

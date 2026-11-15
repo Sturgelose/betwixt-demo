@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rollouts-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rollouts-demo
+  template:
+    metadata:
+      labels:
+        app: rollouts-demo
+    spec:
+      containers:
+        - name: rollouts-demo
+          image: argoproj/rollouts-demo:blue@sha256:211345b036e25b71ac57eb73d2742c399dc773d514fe97714c7f12a376d7e6e0
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 5m
+              memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rollouts-demo
+spec:
+  selector:
+    app: rollouts-demo
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
