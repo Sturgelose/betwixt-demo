@@ -12,3 +12,4 @@ components:
     values: [values.yaml]
 profiles:
   lab: {}
+  staging: {}

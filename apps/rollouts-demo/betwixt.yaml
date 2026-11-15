@@ -7,3 +7,4 @@ components:
     manifests: [manifests.yaml]
 profiles:
   lab: {}
+  staging: {}

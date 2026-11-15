@@ -1,3 +1,15 @@
+# The fleet files describe the clusters, who owns the applications, who can
+# push them, and the order in which a new version reaches the clusters.
+#
+# The workflow `lab` runs `betwixt apply -f fleet` on each push to main.
+# Betwixt reads all .yaml files in this folder as one set. Thus a file can
+# name an object that another file defines, for example a profile.
+#
+# This file holds the parts that are the same for all profiles. Each profile
+# and its clusters are in their own file: lab.yaml and staging.yaml.
+
+# The attribute schema lists the attributes that each profile must set.
+# Values files of the applications can read these attributes.
 apiVersion: betwixt.dev/v1alpha1
 kind: AttributeSchema
 name: default
@@ -7,20 +19,18 @@ attributes:
     required: true
     description: The base DNS domain of the cluster.
 ---
-apiVersion: betwixt.dev/v1alpha1
-kind: Profile
-name: lab
-description: The Raspberry Pi of the lab.
-attributes:
-  domain: lab.sturgelose.com
----
+# A project groups applications and names the team that owns them.
+# An application can deploy only to the profiles of its project.
 apiVersion: betwixt.dev/v1alpha1
 kind: Project
 name: lab
 description: The applications of the lab.
 owners: [team:coolteam]
-profiles: [lab]
+profiles: [lab, staging]
 ---
+# A trust rule tells which CI jobs can push applications, without a secret.
+# This rule trusts the GitHub Actions OIDC token of this repository.
+# A deploy is allowed only from main. A preview is allowed from any branch.
 apiVersion: betwixt.dev/v1alpha1
 kind: TrustRule
 name: lab-deploy
@@ -33,17 +43,16 @@ modes:
   preview: {}
 projects: [lab]
 ---
-apiVersion: betwixt.dev/v1alpha1
-kind: Cluster
-name: pi
-profile: lab
-description: Raspberry Pi 4 with Talos.
-facts:
-  kubeVersion: 1.37.1
-  argocdVersion: 3.6.1
----
+# The pipeline sets the order of the stages. Each stage is one profile.
+# A stage without `after` is a first stage. Thus a new version goes to lab
+# first. The soak is the time that the version must stay healthy in all
+# clusters of lab. After 15 minutes of health in lab, it goes to staging.
 apiVersion: betwixt.dev/v1alpha1
 kind: Pipeline
 name: default
 stages:
   - profile: lab
+    verify:
+      soak: 15m
+  - profile: staging
+    after: [lab]

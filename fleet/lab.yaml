@@ -1,0 +1,24 @@
+# The profile lab and its clusters.
+#
+# A profile is a group of clusters that get the same applications with the
+# same configuration. An application selects profiles, not clusters.
+
+# The profile sets the attributes of the attribute schema in fleet.yaml.
+apiVersion: betwixt.dev/v1alpha1
+kind: Profile
+name: lab
+description: The Raspberry Pi of the lab.
+attributes:
+  domain: lab.sturgelose.com
+---
+# A cluster is one Kubernetes cluster with Argo CD. It belongs to one profile.
+# Facts describe the cluster. Betwixt uses them to render the applications,
+# for example to know which Kubernetes APIs exist.
+apiVersion: betwixt.dev/v1alpha1
+kind: Cluster
+name: pi
+profile: lab
+description: Raspberry Pi 4 with Talos.
+facts:
+  kubeVersion: 1.37.1
+  argocdVersion: 3.6.1
