@@ -1,9 +1,8 @@
 name: lab
 
-# Only manual runs until the fleet transfer from Sturgelose/betwixt is started
-# (Sturgelose/betwixt#80). Before that, the apply fails, because the objects
-# belong to the old repository. Add the push trigger at the cut-over.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
