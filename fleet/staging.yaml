@@ -1,0 +1,21 @@
+# The profile staging and its clusters.
+#
+# This profile shows a second stage of the pipeline. Its cluster does not
+# exist. No Argo CD reports that it is healthy, so a version that enters
+# staging stays there.
+
+apiVersion: betwixt.dev/v1alpha1
+kind: Profile
+name: staging
+description: A sample staging profile.
+attributes:
+  domain: foo.sturgelose.com
+---
+apiVersion: betwixt.dev/v1alpha1
+kind: Cluster
+name: staging-demo
+profile: staging
+description: A cluster that does not exist, to show a second profile.
+facts:
+  kubeVersion: 1.37.1
+  argocdVersion: 3.6.1
