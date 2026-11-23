@@ -8,7 +8,7 @@ A new version of an application goes to lab first. After it is healthy in lab fo
 |---|---|
 | `fleet/fleet.yaml` | The parts of the fleet that are the same for all profiles: the attribute schema, the project, the trust rule, and the pipeline. |
 | `fleet/lab.yaml` | The profile `lab` and its cluster, the Raspberry Pi. |
-| `fleet/staging.yaml` | The profile `staging` and its cluster `pi-staging`. The cluster shares the Raspberry Pi with `pi` and uses the prefix `stg`. The old cluster `staging-demo` is decommissioned. |
+| `fleet/staging.yaml` | The profile `staging` and its cluster `pi-staging`. The cluster shares the Raspberry Pi with `pi` and uses the prefix `stg`. |
 | `apps/` | One folder for each application. Each folder has a `betwixt.yaml` and its values. |
 
 The workflow `lab` applies the fleet files and pushes each application from `main`. It authenticates with the OIDC token of GitHub Actions, so it needs no secret.
