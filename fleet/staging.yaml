@@ -1,21 +1,35 @@
 # The profile staging and its clusters.
 #
-# This profile shows a second stage of the pipeline. Its cluster does not
-# exist. No Argo CD reports that it is healthy, so a version that enters
-# staging stays there.
+# This profile is the second stage of the pipeline. Its cluster pi-staging
+# runs on the same Raspberry Pi as lab. It is a sharing cluster with the prefix
+# stg. Its applications get the namespaces stg-<namespace> and the Argo CD
+# names stg.<application>.
+#
+# The old cluster staging-demo does not exist. It is decommissioned. A later
+# change removes it.
 
 apiVersion: betwixt.dev/v1alpha1
 kind: Profile
 name: staging
 description: A sample staging profile.
 attributes:
-  domain: foo.sturgelose.com
+  domain: stg.sturgelose.com
 ---
 apiVersion: betwixt.dev/v1alpha1
 kind: Cluster
 name: staging-demo
 profile: staging
+state: decommissioned
 description: A cluster that does not exist, to show a second profile.
 facts:
   kubeVersion: 1.37.1
   argocdVersion: 3.6.1
+---
+# A sharing cluster sets no facts. It uses the facts of pi.
+apiVersion: betwixt.dev/v1alpha1
+kind: Cluster
+name: pi-staging
+profile: staging
+shares: pi
+prefix: stg
+description: The staging stage on the Raspberry Pi of the lab, next to pi.

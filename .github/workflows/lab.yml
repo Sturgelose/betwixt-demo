@@ -27,7 +27,7 @@ jobs:
         with:
           # betwixt push lists the commits since the last revision.
           fetch-depth: 0
-      - uses: Sturgelose/betwixt-cli@v0.1.1
+      - uses: Sturgelose/betwixt-cli@v0.2.0
       - run: betwixt apply -f fleet
       - run: |
           for app in apps/*/; do
