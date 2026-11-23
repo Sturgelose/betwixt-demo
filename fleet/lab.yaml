@@ -11,7 +11,8 @@ description: The Raspberry Pi of the lab.
 attributes:
   domain: lab.sturgelose.com
 ---
-# A cluster is one Kubernetes cluster with Argo CD. It belongs to one profile.
+# A cluster is one Kubernetes cluster with Argo CD, or a share of the
+# Kubernetes cluster of another cluster. It belongs to one profile.
 # Facts describe the cluster. Betwixt uses them to render the applications,
 # for example to know which Kubernetes APIs exist.
 apiVersion: betwixt.dev/v1alpha1
